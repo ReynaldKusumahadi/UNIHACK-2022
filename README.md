@@ -3,7 +3,9 @@ Our project in UNIHACK 2022
 
 Making an App that has the characteristics of reddit, but is immutable
 
-Done by:
+Done by: Stackoverflow Enjoyers
+
+Members:
 1. Reynald Kusumahadi   **(Monash University)**
 2. Akbar Fadiansyah     **(Monash University)**
 3. Yuki Kume            **(Monash University)**
