@@ -56,8 +56,8 @@
 
 
 /* eslint-disable no-console */
-// 'use strict'
-//
+'use strict'
+
 // const Libp2p = require('libp2p')
 // const TCP = require('libp2p-tcp')
 // const Mplex = require('libp2p-mplex')
@@ -116,70 +116,150 @@
 
 
 /* eslint-disable no-console */
-'use strict'
+// 'use strict'
+//
+// const Libp2p = require('libp2p')
+// const TCP = require('libp2p-tcp')
+// const Mplex = require('libp2p-mplex')
+// const { NOISE } = require('libp2p-noise')
+// const Gossipsub = require('libp2p-gossipsub')
+// const Bootstrap = require('libp2p-bootstrap')
+// const PubsubPeerDiscovery = require('libp2p-pubsub-peer-discovery')
+//
+// const createRelayServer = require('libp2p-relay-server')
+//
+// const createNode = async (bootstrapers) => {
+//         const node = await Libp2p.create({
+//             addresses: {
+//                 listen: ['/ip4/0.0.0.0/tcp/0']
+//             },
+//             modules: {
+//                 transport: [TCP],
+//                 streamMuxer: [Mplex],
+//                 connEncryption: [NOISE],
+//                 pubsub: Gossipsub,
+//                 peerDiscovery: [Bootstrap, PubsubPeerDiscovery]
+//             },
+//             config: {
+//                 peerDiscovery: {
+//                     [PubsubPeerDiscovery.tag]: {
+//                         interval: 1000,
+//                         enabled: true
+//                     },
+//                     [Bootstrap.tag]: {
+//                         enabled: true,
+//                         list: bootstrapers
+//                     }
+//                 }
+//             }
+//         })
+//
+//         return node
+//     }
+//
+// ;(async () => {
+//     const relay = await createRelayServer({
+//         listenAddresses: ['/ip4/0.0.0.0/tcp/0']
+//     })
+//     console.log(`libp2p relay starting with id: ${relay.peerId.toB58String()}`)
+//     await relay.start()
+//     const relayMultiaddrs = relay.multiaddrs.map((m) => `${m.toString()}/p2p/${relay.peerId.toB58String()}`)
+//
+//     const [node1, node2] = await Promise.all([
+//         createNode(relayMultiaddrs),
+//         createNode(relayMultiaddrs)
+//     ])
+//
+//     node1.on('peer:discovery', (peerId) => {
+//         console.log(`Peer ${node1.peerId.toB58String()} discovered: ${peerId.toB58String()}`)
+//     })
+//     node2.on('peer:discovery', (peerId) => {
+//         console.log(`Peer ${node2.peerId.toB58String()} discovered: ${peerId.toB58String()}`)
+//     })
+//
+//     ;[node1, node2].forEach((node, index) => console.log(`Node ${index} starting with id: ${node.peerId.toB58String()}`))
+//     await Promise.all([
+//         node1.start(),
+//         node2.start()
+//     ])
+// })();
 
-const Libp2p = require('libp2p')
-const TCP = require('libp2p-tcp')
-const Mplex = require('libp2p-mplex')
-const { NOISE } = require('libp2p-noise')
-const Gossipsub = require('libp2p-gossipsub')
-const Bootstrap = require('libp2p-bootstrap')
-const PubsubPeerDiscovery = require('libp2p-pubsub-peer-discovery')
 
-const createRelayServer = require('libp2p-relay-server')
 
-const createNode = async (bootstrapers) => {
-        const node = await Libp2p.create({
-            addresses: {
-                listen: ['/ip4/0.0.0.0/tcp/0']
-            },
-            modules: {
-                transport: [TCP],
-                streamMuxer: [Mplex],
-                connEncryption: [NOISE],
-                pubsub: Gossipsub,
-                peerDiscovery: [Bootstrap, PubsubPeerDiscovery]
-            },
-            config: {
-                peerDiscovery: {
-                    [PubsubPeerDiscovery.tag]: {
-                        interval: 1000,
-                        enabled: true
-                    },
-                    [Bootstrap.tag]: {
-                        enabled: true,
-                        list: bootstrapers
-                    }
-                }
-            }
-        })
-
-        return node
-    }
-
-;(async () => {
-    const relay = await createRelayServer({
-        listenAddresses: ['/ip4/0.0.0.0/tcp/0']
-    })
-    console.log(`libp2p relay starting with id: ${relay.peerId.toB58String()}`)
-    await relay.start()
-    const relayMultiaddrs = relay.multiaddrs.map((m) => `${m.toString()}/p2p/${relay.peerId.toB58String()}`)
-
-    const [node1, node2] = await Promise.all([
-        createNode(relayMultiaddrs),
-        createNode(relayMultiaddrs)
-    ])
-
-    node1.on('peer:discovery', (peerId) => {
-        console.log(`Peer ${node1.peerId.toB58String()} discovered: ${peerId.toB58String()}`)
-    })
-    node2.on('peer:discovery', (peerId) => {
-        console.log(`Peer ${node2.peerId.toB58String()} discovered: ${peerId.toB58String()}`)
-    })
-
-    ;[node1, node2].forEach((node, index) => console.log(`Node ${index} starting with id: ${node.peerId.toB58String()}`))
-    await Promise.all([
-        node1.start(),
-        node2.start()
-    ])
-})();
+//
+// import 'babel-polyfill'
+// import Libp2p from 'libp2p'
+// import Websockets from 'libp2p-websockets'
+// import WebRTCStar from 'libp2p-webrtc-star'
+// import { NOISE } from 'libp2p-noise'
+// import Mplex from 'libp2p-mplex'
+// import Bootstrap from 'libp2p-bootstrap'
+//
+// document.addEventListener('DOMContentLoaded', async () => {
+//
+//     // Create our libp2p node
+//     const libp2p = await Libp2p.create({
+//         addresses: {
+//             // Add the signaling server address, along with our PeerId to our multiaddrs list
+//             // libp2p will automatically attempt to dial to the signaling server so that it can
+//             // receive inbound connections from other peers
+//             listen: [
+//                 '/dns4/wrtc-star1.par.dwebops.pub/tcp/443/wss/p2p-webrtc-star',
+//                 '/dns4/wrtc-star2.sjc.dwebops.pub/tcp/443/wss/p2p-webrtc-star'
+//             ]
+//         },
+//         modules: {
+//             transport: [Websockets, WebRTCStar],
+//             connEncryption: [NOISE],
+//             streamMuxer: [Mplex],
+//             peerDiscovery: [Bootstrap]
+//         },
+//         config: {
+//             peerDiscovery: {
+//                 // The `tag` property will be searched when creating the instance of your Peer Discovery service.
+//                 // The associated object, will be passed to the service when it is instantiated.
+//                 [Bootstrap.tag]: {
+//                     enabled: true,
+//                     list: [
+//                         '/dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN',
+//                     ]
+//                 }
+//             }
+//         }
+//     })
+//
+//
+//
+//     // UI elements
+//     const status = document.getElementById('status')
+//     const output = document.getElementById('output')
+//
+//     output.textContent = ''
+//
+//     function log (txt) {
+//         console.info(txt)
+//         output.textContent += `${txt.trim()}\n`
+//     }
+//
+//     // Listen for new peers
+//     libp2p.on('peer:discovery', (peerId) => {
+//         log(`Found peer ${peerId.toB58String()}`)
+//     })
+//
+//     // Listen for new connections to peers
+//     libp2p.connectionManager.on('peer:connect', (connection) => {
+//         log(`Connected to ${connection.remotePeer.toB58String()}`)
+//     })
+//
+//     // Listen for peers disconnecting
+//     libp2p.connectionManager.on('peer:disconnect', (connection) => {
+//         log(`Disconnected from ${connection.remotePeer.toB58String()}`)
+//     })
+//
+//     await libp2p.start()
+//     status.innerText = 'libp2p started!'
+//     log(`libp2p id is ${libp2p.peerId.toB58String()}`)
+//
+//     // Export libp2p to the window so you can play with the API
+//     window.libp2p = libp2p
+// })
