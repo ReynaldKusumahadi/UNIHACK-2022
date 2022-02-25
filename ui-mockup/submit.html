@@ -16,7 +16,7 @@
     <!-- CSS for footer -->
     <link href="css/footers.css" rel="stylesheet">
 
-    <title>User 0xc039c745468cb563be1fa5d7ec8af8e059659a2378fc4ce6d70643481432a0ce - Distribuddit</title>
+    <title>Create a post - Distribuddit</title>
 </head>
 
 <body>
@@ -38,46 +38,27 @@
         </div>
 
         <main>
-            <div class="container pb-5">
-                <div class="row">
-                    <div class="col">
-                        <h1>Display Name</h1>
-                    </div>
+            <h1>Create a post</h1>
+            <form>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title">
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <span>Username: 0xc039c745468cb563be1fa5d7ec8af8e059659a2378fc4ce6d70643481432a0ce</span>
-                    </div>
+                <div class="mb-3">
+                    <label for="url" class="form-label">URL</label>
+                    <input type="text" class="form-control" id="url">
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <span>Posts: 1234</span>
-                    </div>
+                <div class="mb-3">
+                    <label for="subreddit" class="form-label">Subreddit</label>
+                    <input type="text" class="form-control" id="subreddit">
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <span>Comments: 1234</span>
-                    </div>
+                <div class="mb-3">
+                    <label for="text" class="form-label">Text</label>
+                    <textarea class="form-control" id="text aria-describedby="textHelp"></textarea>
+                    <div id="textHelp" class="form-text">Extra things that you want to say about the post.</div>
                 </div>
-                <br>
-                <div class="row">
-                    <div class="col">
-                        <h2>About</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ipsum ante, ultrices quis
-                            ullamcorper id, mattis sit amet magna. Suspendisse eget risus quis magna mollis congue.</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <a href="#">Posts</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <a href="#">Comments</a>
-                    </div>
-                </div>
-            </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
         </main>
 
         <!-- Footer -->
