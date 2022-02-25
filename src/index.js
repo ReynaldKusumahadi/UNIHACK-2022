@@ -1,3 +1,5 @@
+// Connecting two nodes and pining them together
+
 // const Libp2p = require('libp2p')
 // const TCP = require('libp2p-tcp')
 // const {NOISE} = require("libp2p-noise")
@@ -55,9 +57,11 @@
 
 
 
-/* eslint-disable no-console */
-'use strict'
+// Basic Pubsub
 
+/* eslint-disable no-console */
+// 'use strict'
+//
 // const Libp2p = require('libp2p')
 // const TCP = require('libp2p-tcp')
 // const Mplex = require('libp2p-mplex')
@@ -65,6 +69,11 @@
 // const Gossipsub = require('libp2p-gossipsub')
 // const { fromString: uint8ArrayFromString } = require('uint8arrays/from-string')
 // const { toString: uint8ArrayToString } = require('uint8arrays/to-string')
+//
+// var topicAddress = "TopicAddress1";
+// var topicOwnerAddress = "TopicOwnerAddress1";
+// var topicTitle = "TopicTitle1";
+// var topicDescription = "TopicDescription1";
 //
 // const createNode = async () => {
 //       const node = await Libp2p.create({
@@ -107,13 +116,21 @@
 //   node2.pubsub.subscribe(topic)
 //
 //   // node2 publishes "news" every second
-//   setInterval(() => {
-//     node2.pubsub.publish(topic, uint8ArrayFromString('Bird bird bird, bird is the word!'))
-//   }, 1000)
+//
+//     // Publish json data
+//     var jsonData = {
+//         "topicAddress": topicAddress,
+//         "topicOwnerAddress": topicOwnerAddress,
+//         "topicTitle": topicTitle,
+//         "topicDescription": topicDescription
+//     }
+//
+//     node2.pubsub.publish(topic, uint8ArrayFromString(JSON.stringify(jsonData)))
 // })()
+//
 
 
-
+// PubSub based peer discovery
 
 /* eslint-disable no-console */
 // 'use strict'
@@ -186,7 +203,8 @@
 
 
 
-//
+// Web implementation (Using WebRTC) | Peer discovery based on WebRTC
+
 // import 'babel-polyfill'
 // import Libp2p from 'libp2p'
 // import Websockets from 'libp2p-websockets'
@@ -263,3 +281,5 @@
 //     // Export libp2p to the window so you can play with the API
 //     window.libp2p = libp2p
 // })
+
+
