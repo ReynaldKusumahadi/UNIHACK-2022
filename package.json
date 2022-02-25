@@ -1,0 +1,32 @@
+{
+  "name": "pg-js-libp2p",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Wren Hainsworth",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WrenHainsworth/pg-js-libp2p.git"
+  },
+  "bugs": {
+    "url": "https://github.com/WrenHainsworth/pg-js-libp2p/issues"
+  },
+  "homepage": "https://github.com/WrenHainsworth/pg-js-libp2p#readme",
+  "description": "",
+  "dependencies": {
+    "libp2p": "^0.36.2",
+    "libp2p-bootstrap": "^0.14.0",
+    "libp2p-gossipsub": "^0.13.0",
+    "libp2p-mplex": "^0.10.7",
+    "libp2p-noise": "^4.0.0",
+    "libp2p-pubsub-peer-discovery": "^4.0.0",
+    "libp2p-relay-server": "^0.3.0",
+    "libp2p-tcp": "^0.17.2",
+    "multiaddr": "^10.0.1",
+    "uint8arrays": "^3.0.0"
+  }
+}
