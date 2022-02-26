@@ -12,3 +12,11 @@ Members:
 4. Sanskar Gauchan      **(University of Technology Sydney)**
 5. Hassaan Qadeer       **(University of Melbourne)**
 6. Clarie Chek          **(University of Adelaide)**
+
+## Installation
+
+### Docker Compose
+
+```
+docker-compose up
+```
