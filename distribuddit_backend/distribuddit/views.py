@@ -3,4 +3,10 @@ from django.http import HttpResponse
 
 # Create your views here.
 def index(request):
-    return HttpResponse("<h1>Test</h1>")
+    page_title = 'Home'
+    context = {'page_title': page_title}
+    return render(request, 'distribuddit/homepage.html', context)
+
+
+def post(request):
+    return HttpResponse("TODO")
