@@ -1,1 +1,1 @@
-web: gunicorn distribuddit_backend.wsgi --log-file -
+web: gunicorn distribuddit_Backend.wsgi --log-file -
