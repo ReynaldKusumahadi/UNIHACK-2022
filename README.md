@@ -13,10 +13,23 @@ Members:
 5. Hassaan Qadeer       **(University of Melbourne)**
 6. Clarie Chek          **(University of Adelaide)**
 
-## Installation
+## Deployment
 
 ### Docker Compose
 
+#### Backend server
+
 ```
 docker-compose up
+```
+
+#### Gun
+
+Currently, there is no docker-compose file for this container. Do this outside this repo directory.
+
+```
+git clone https://github.com/amark/gun.git
+cd gun
+docker build -t gundb .
+docker run -p 8765:8765 --name distribuddit-gun gundb
 ```
