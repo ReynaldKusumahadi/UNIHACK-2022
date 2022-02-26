@@ -16,6 +16,8 @@
 
     <!-- CSS for footer -->
     <link href="css/footers.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
 
     <title>Distribuddit</title>
 </head>
@@ -32,20 +34,21 @@
                 <ul class="nav nav-pills">
                     <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Home</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">Subreddits</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Login</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Sign Up</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link logged-in" id="login-button">Connect Wallet</a></li>
+<!--                    <li class="nav-item"><a href="#" class="nav-link">Sign Up</a></li>-->
                 </ul>
             </header>
         </div>
         <main>
             <!-- A brief title section -->
             <div class="container pb-5">
+                <p class="logged-in">Logged in with account: <span class="showAccount"></span></p>
                 <h1>Distribuddit</h1>
                 <p>A decentralised alternative to Reddit. Control your opinions online. Express your thoughts freely without fears of censorship.</p>
                 <a href="#" class="btn btn-primary">Create a post</a>
-                <button class="enableEthereumButton">Enable Ethereum</button>
-                <h2>Account: <span class="showAccount"></span></h2>
-                <textarea id="paste"></textarea>
+<!--                <button class="enableEthereumButton">Enable Ethereum</button>-->
+
+<!--                <textarea id="paste"></textarea>-->
             </div>
             <!-- Post list -->
             <div class="d-grid gap-3">
@@ -133,62 +136,16 @@
             </footer>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
-<!--    <script src="script.js"></script>-->
+
+    <script src="js/script.js"></script>
     <script>
-        // gun = GUN(); // your code here
-        // var gun = Gun({ file: 'db/data.json', radisk: false, localStorage: true });
-        //
-        // // Gun('localhost/gun')
-        //
-        // gun.get('key').put({hello:"world"
-        // }, function (ack) {
-        //     // console.log(ack);
-        // });
-        //
-        // gun.get('key').on(function(data, key){
-        //     // {property: 'value'}, 'key'
-        //     console.log(data);
-        // })
-
-        // Initiate Gun
-        // var gun = Gun();
-        // // Announce to peers
-        // gun.get('key').put({hello:"world"});
-        // // Listen for peers
-        // gun.get('key').on(function(data, key){
-        //     console.log(data);
-        // })
-
-        // var gun = Gun();
-        // , 'https://gun-manhattan.herokuapp.com/gun'
-
-        gun = Gun(['http://localhost:8765/gun','https://gun-server-unihack.herokuapp.com/gun']);
-        copy = gun.get('test').get('paste');
-        paste.oninput = () => {
-            copy.put(copy.put(paste.value));
-        }
-        copy.on((data) => {paste.value = data});
-
-        if (typeof window.ethereum !== 'undefined') {
-            console.log('MetaMask is installed!');
-        }
-
-        const ethereumButton = document.querySelector('.enableEthereumButton');
-        const showAccount = document.querySelector('.showAccount');
-
-        ethereumButton.addEventListener('click', () => {
-            getAccount();
+        // Hide class logged-in when the page loads
+        // When page loads
+        $(document).ready(function() {
+            document.getElementsByClassName("logged-in")[1].style.display = "none";
+            document.getElementsByClassName("logged-in")[0].style.display = "block";
+            console.log("Page loaded");
         });
-
-        async function getAccount() {
-            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-            const account = accounts[0];
-            showAccount.innerHTML = account;
-        }
-
-
 
     </script>
 
