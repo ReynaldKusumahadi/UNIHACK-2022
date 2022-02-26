@@ -9,24 +9,31 @@ def index(request):
 
 
 def post(request):
-    return HttpResponse("TODO")
+    page_title = 'Post'
+    context = {'page_title': page_title}
+    return render(request, 'distribuddit/post.html')
 
 def create_subreddit(request):
-    #TODO
+    page_title = 'Create subreddit'
+    context = {'page_title': page_title}
     return render(request, 'distribuddit/create-subreddit.html')
 
 def submit(request):
-    #TODO
+    page_title = 'Create a post'
+    context = {'page_title': page_title}
     return render(request, 'distribuddit/submit.html')
 
 def subreddit(request):
-    #TODO
+    page_title = '/r/subreddit'
+    context = {'page_title': page_title}
     return render(request, 'distribuddit/subreddit.html')
 
 def subscribed(request):
-    #TODO
+    page_title = 'Subscriptions'
+    context = {'page_title': page_title}
     return render(request, 'distribuddit/subscribed.html')
 
 def user(request):
-    #TODO
+    page_title = 'User'
+    context = {'page_title': page_title}
     return render(request, 'distribuddit/user.html')
