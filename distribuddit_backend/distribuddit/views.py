@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotAllowed
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 
@@ -59,6 +59,12 @@ def submitPost(request):
     else:
         return HttpResponse('Failed')
 
+def update_session(request):
+    if request.method == 'POST':
+        request.session['accountID'] = request.POST['accountID']
+        return HttpResponse('Account ID Set')
+    else:
+        return HttpResponse('Failed')
 
 
 # def post(request):

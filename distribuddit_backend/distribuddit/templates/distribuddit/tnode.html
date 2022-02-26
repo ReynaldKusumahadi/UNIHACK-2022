@@ -47,9 +47,12 @@
         <main>
             <!-- About section-->
             <div class="d-grid gap-3 pb-5">
-                            <p class="logged-in">Logged in with account: <span class="showAccount"></span></p>
+                {{ request.session.accountID }}
+                <div class="container pb-5">
+                    <h1 id="topicTitle">-</h1>
+                    <small class="logged-in"><span class="showAccount"></span></small>
+                </div>
 
-                <h1 id="topicTitle">-</h1>
                 <div class="container">
                     <div class="row">
                         <div class="col">
@@ -71,9 +74,9 @@
                 <h2>About</h2>
                 <p id="topicDescription">-</p>
                 <div class="container">
-                <div class="row" style="text-align: center">
+                <div class="row" style="text-align: center" id="sub-button">
                     <div class="col"><a href="#" class="btn btn-primary" id="create" style="width: 80%">Create a post</a></div>
-                    <div class="col"> <a href="#" class="btn btn-success" id="subscribe" style="width: 80%">Subscribe</a></div>
+{#                    <div class="col"> <a href="#" class="btn btn-success" id="subscribe" style="width: 80%">Subscribe</a></div>#}
                  </div>
                 </div>
 
@@ -123,14 +126,25 @@
             var button = document.getElementById("create");
             button.href = "submit?id=" + paramValue;
             fetchPosts(1, paramValue);
-
+            console.log(account);
             if (account == "") {
-                document.getElementsByClassName("logged-in")[1].style.display = "none";
-                document.getElementsByClassName("logged-in")[0].style.display = "block";
+
             } else {
-                document.getElementsByClassName("logged-in")[1].style.display = "block";
-                document.getElementsByClassName("logged-in")[0].style.display = "none";
-                document.getElementsByClassName("showAccount")[0].innerHTML = account;
+                // <div class="col"> <a href="#" class="btn btn-success" id="subscribe" style="width: 80%">Subscribe</a></div>
+                // Create div element
+                var div = document.createElement("div");
+                div.className = "col";
+                div.style.textAlign = "center";
+                // Create a button element
+                var button = document.createElement("a");
+                button.className = "btn btn-success";
+                button.id = "subscribe";
+                button.style.width = "80%";
+                button.innerHTML = "Subscribe";
+                // Append button to div
+                div.appendChild(button);
+                // Append div to row
+                document.getElementById("sub-button").appendChild(div);
             }
 
         });

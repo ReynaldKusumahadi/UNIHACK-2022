@@ -26,6 +26,18 @@ async function getAccount() {
     account = accounts[0];
     document.getElementsByClassName("logged-in")[1].style.display = "block";
     document.getElementsByClassName("logged-in")[0].style.display = "none";
+    $.ajax({
+                url: "/ajax/update_session/",
+                type: "POST",
+                headers: {'X-CSRFToken': csrftoken},
+                mode: 'same-origin',
+                data: {
+                    accountID: account,
+                },
+                success: function(data) {
+                    console.log("Account ID set");
+                }
+            });
     showAccount.innerHTML = account;
 }
 
@@ -141,37 +153,8 @@ function exploreTopics(){
 
             addRow(title, description, topicID);
 
-            // var div = document.createElement("div");
-            // div.className = "d-grid gap-3";
-            // var container = document.createElement("div");
-            // container.className = "container bg-light border pt-2 pb-2";
-            // var row = document.createElement("div");
-            // row.className = "row";
-            // var col8 = document.createElement("div");
-            // col8.className = "col-8";
-            // var h4 = document.createElement("h4");
-            // var a = document.createElement("a");
-            // a.href = "#";
-            // a.innerHTML = title + " | " + description;
-            // h4.appendChild(a);
-            // col8.appendChild(h4);
-            // var col = document.createElement("div");
-            // col.className = "col d-flex justify-content-center";
-            //
-            // row.appendChild(col8);
-            // row.appendChild(col);
-            // container.appendChild(row);
-            // div.appendChild(container);
-            // document.getElementById("topics").appendChild(div);
-
         }
     }
-
-    //
-    // uniqueTitles.forEach((num1,index) => {
-    //     const num2 = uniqueDescriptions[index];
-    //     console.log(num1, num2);
-    // })
 
 }
 
@@ -361,6 +344,35 @@ function addPost(mode,title,author,time,content, postID, targetTopicID) {
     row.appendChild(col);
     post.appendChild(row);
     document.getElementById("posts").appendChild(post);
+}
+
+function subscribe(topicID, userID){
+    if (userID === null) {
+        alert("Please login to subscribe");
+    } else {
+        var sublist = "sublist-"+userID;
+        gun.get(sublist).get(topicID).put({tNode: topicID, status:true});
+    }
+}
+
+function fetchSubscriptions(userID){
+    if (userID === null) {
+        alert("Please login to subscribe");
+    } else {
+        var sublist = "sublist-"+userID;
+
+        const titles = [];
+        const descriptions = [];
+        const topicIDs = [];
+        gun.get('topics').map().on(function(data, description) {
+            if (data.a != null && data.c != null){
+                topicIDs.push(data.a);
+                titles.push(data.c);
+                descriptions.push(data.d);
+            }
+        })
+
+    }
 }
 
 function stringToHash(string) {

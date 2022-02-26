@@ -12,6 +12,7 @@ urlpatterns = [
     path('submit', views.submit, name='submit'),
     re_path(r'^ajax/ajax/$', views.ajax, name='ajax'),
     re_path(r'^ajax/submitPost/$', views.submitPost, name='submitPost'),
+    re_path(r'^ajax/update_session/$', views.update_session, name='update_session')
 
 
 
