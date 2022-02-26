@@ -28,4 +28,5 @@ def subscribed(request):
     return render(request, 'distribuddit/subscribed.html')
 
 def user(request):
+    #TODO
     return render(request, 'distribuddit/user.html')
