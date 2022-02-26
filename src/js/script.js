@@ -38,13 +38,16 @@ async function newTopic(){
     if (publicAddress== null)  {
         alert("Please login to MetaMask first!");
     } else{
+        var topicID = stringToHash(title);
         var search = searchTopic(title);
         if(search.error){ // It is a new topic
             gun.get('topics').get(title).put({ // title can be hash too
-                a:publicAddress,
-                b: title,
-                c: content
+                a: topicID,
+                b: publicAddress,
+                c: title,
+                d: content
             });
+
         }else{
             alert("Topic already exists!");
         }
@@ -80,7 +83,7 @@ function searchTopic(topicTitle){
     const properties = [];
     gun.get('topics').get(topicTitle).map().on(function(data){
         // Store data in array
-        if (properties.length > 2){
+        if (properties.length > 3){
             return{
                 error: "Too many properties"
             }
@@ -111,8 +114,10 @@ function exploreTopics(){
     const titles = [];
     const descriptions = [];
     gun.get('topics').map().on(function(data, description) {
-        titles.push(data.b);
-        descriptions.push(data.c);
+        if (data.a != null && data.c != null){
+            titles.push(data.c);
+            descriptions.push(data.d);
+        }
     })
     // console.log(array);
     var uniqueTitles = new Set(titles);
@@ -121,47 +126,39 @@ function exploreTopics(){
     var uniqueTitlesArray = Array.from(uniqueTitles);
     var uniqueDescriptionsArray = Array.from(uniqueDescriptions);
 
-    for (var i = 0; i < uniqueTitlesArray.length; i++) {
-        var title = uniqueTitlesArray[i];
-        var description = uniqueDescriptionsArray[i];
+    if (uniqueTitlesArray.length === 0){
+        alert("No topics found!");
+    } else {
+        for (var i = 0; i < uniqueTitlesArray.length; i++) {
+            var title = uniqueTitlesArray[i];
+            var description = uniqueDescriptionsArray[i];
 
+            addRow(title, description);
 
-        // <div className="d-grid gap-3">
-        //     <div className="container bg-light border pt-2 pb-2">
-        //         <div className="row">
-        //             <div className="col-8">
-        //                 <h4><a href="">TnodeName | Hash</a></h4>
-        //             </div>
-        //             <div className="col d-flex justify-content-center">
-        //                 <button type="button" className="btn btn-danger">Unsubscribe</button>
-        //             </div>
-        //         </div>
-        //     </div>
-        // </div>
+            // var div = document.createElement("div");
+            // div.className = "d-grid gap-3";
+            // var container = document.createElement("div");
+            // container.className = "container bg-light border pt-2 pb-2";
+            // var row = document.createElement("div");
+            // row.className = "row";
+            // var col8 = document.createElement("div");
+            // col8.className = "col-8";
+            // var h4 = document.createElement("h4");
+            // var a = document.createElement("a");
+            // a.href = "#";
+            // a.innerHTML = title + " | " + description;
+            // h4.appendChild(a);
+            // col8.appendChild(h4);
+            // var col = document.createElement("div");
+            // col.className = "col d-flex justify-content-center";
+            //
+            // row.appendChild(col8);
+            // row.appendChild(col);
+            // container.appendChild(row);
+            // div.appendChild(container);
+            // document.getElementById("topics").appendChild(div);
 
-        var div = document.createElement("div");
-        div.className = "d-grid gap-3";
-        var container = document.createElement("div");
-        container.className = "container bg-light border pt-2 pb-2";
-        var row = document.createElement("div");
-        row.className = "row";
-        var col8 = document.createElement("div");
-        col8.className = "col-8";
-        var h4 = document.createElement("h4");
-        var a = document.createElement("a");
-        a.href = "#";
-        a.innerHTML = title + " | " + description;
-        h4.appendChild(a);
-        col8.appendChild(h4);
-        var col = document.createElement("div");
-        col.className = "col d-flex justify-content-center";
-
-        row.appendChild(col8);
-        row.appendChild(col);
-        container.appendChild(row);
-        div.appendChild(container);
-        document.getElementById("topics").appendChild(div);
-
+        }
     }
 
     //
@@ -171,3 +168,102 @@ function exploreTopics(){
     // })
 
 }
+
+function addRow(title, description){
+    var div = document.createElement("div");
+    div.className = "d-grid gap-3";
+    var container = document.createElement("div");
+    container.className = "container bg-light border pt-2 pb-2";
+    var row = document.createElement("div");
+    row.className = "row";
+    var col8 = document.createElement("div");
+    col8.className = "col-8";
+    var h4 = document.createElement("h4");
+    var a = document.createElement("a");
+    a.href = "#";
+    a.innerHTML = title + " | " + description;
+    h4.appendChild(a);
+    col8.appendChild(h4);
+    var col = document.createElement("div");
+    col.className = "col d-flex justify-content-center";
+    var button = document.createElement("button");
+    button.type = "button";
+    button.className = "btn btn-success";
+    button.innerHTML = "Subscribe";
+    col.appendChild(button);
+    row.appendChild(col8);
+    row.appendChild(col);
+    container.appendChild(row);
+    div.appendChild(container);
+    document.getElementById("topics").appendChild(div);
+}
+
+function subscribe(topicTitle) {
+    var user = account;
+    var topic = topicTitle;
+
+    if (user === null) {
+        alert("Please login to subscribe to a topic");
+    } else {
+        gun.get(user).get('').put({tnodeAddress: "Address2"})
+    }
+
+    // Add to user's subscriptions
+
+}
+
+function stringToHash(string) {
+    var hash = 0;
+    if (string.length === 0) return hash;
+    for (i = 0; i < string.length; i++) {
+        char = string.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return hash;
+}
+
+// Comment Structure
+// gun.get('comments').get('postID').get("commentID").put({authorOD:"User ID", comment: "Comment", datetime: "Date Time"})
+// gun.get('comments').get('post1').map().on(function(data){console.log(data)})
+// Returns
+//{
+//   "_": {
+//     "#": "comments/post2/commentID1",
+//     ">": {
+//       "comment": 1645875622100,
+//       "userID": 1645875622100
+//     }
+//   },
+//   "comment": "Comment1",
+//   "userID": "User ID1"
+// }
+
+
+
+// Post Structure
+// gun.get('posts').get('post1').put({postID: 'Post ID', targetTopicID:'Topic ID', authorID:'User ID', content:'Sentence', datetime: "Date Time"})
+// gun.get('posts').map().on(function(data){console.log(data)})
+
+// Returns
+// {
+//   "_": {
+//     "#": "posts/post1",
+//     ">": {
+//       "authorID": 1645876067600,
+//       "targetTopicID": 1645876067600
+//     }
+//   },
+//   "authorID": "Author ID",
+//   "targetTopicID": "topic ID"
+// }
+
+
+
+// Subscription Structure
+// gun.get('sublist-userID').get('topicID').put('topicID')
+// gun.get('sublist-userID').map().on(function(data){console.log(data)})
+
+// Returns
+// topicID
+// topicID2
