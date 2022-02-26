@@ -15,6 +15,12 @@ Members:
 
 ## Deployment
 
+### Heroku
+
+```
+git subtree push --prefix distribuddit_backend heroku main
+```
+
 ### Docker Compose
 
 #### Backend server

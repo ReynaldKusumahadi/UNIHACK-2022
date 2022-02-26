@@ -4,7 +4,7 @@ ENV PYTHONUNBUFFERED=1
 FROM base as builder
 RUN apk add --update --no-cache gcc postgresql-dev python3-dev musl-dev
 WORKDIR /install
-COPY requirements.txt /requirements.txt
+COPY distribuddit_backend/requirements.txt /requirements.txt
 RUN pip install --prefix=/install -r /requirements.txt
 
 FROM base
