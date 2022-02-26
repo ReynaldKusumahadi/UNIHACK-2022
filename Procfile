@@ -1,0 +1,1 @@
+web: gunicorn distribuddit_Backend.wsgi --log-file -
