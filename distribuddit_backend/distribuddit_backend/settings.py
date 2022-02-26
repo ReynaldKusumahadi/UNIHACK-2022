@@ -61,7 +61,7 @@ ROOT_URLCONF = 'distribuddit_backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR, 'html_files'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
