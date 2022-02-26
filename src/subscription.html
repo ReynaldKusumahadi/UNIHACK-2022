@@ -15,8 +15,11 @@
 
     <!-- CSS for footer -->
     <link href="css/footers.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
 
-    <title>Create a post - Distribuddit</title>
+
+    <title>Subscriptions - Distribuddit</title>
 </head>
 
 <body>
@@ -24,41 +27,37 @@
         <!-- header bar -->
         <div class="container">
             <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-                <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+                <a href="index.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
                     <span class="fs-4">Distribuddit</span>
                 </a>
 
                 <ul class="nav nav-pills">
-                    <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Subreddits</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Login</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Sign Up</a></li>
+                    <li class="nav-item"><a href="index.html" class="nav-link active" aria-current="page">Home</a></li>
+                    <li class="nav-item"><a href="newTopic.html" class="nav-link">New Tnode</a></li>
+                    <li class="nav-item"><a href="subscription.html" class="nav-link">Tnode</a></li>
+                    <li class="nav-item"><a href="explore.html" class="nav-link">Explore</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link logged-in" id="login-button">Connect Wallet</a></li>
                 </ul>
             </header>
         </div>
 
         <main>
-            <h1>Create a post</h1>
-            <form>
-                <div class="mb-3">
-                    <label for="title" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="title" required>
+            <div class="container pb-5">
+                <h1>Subscriptions</h1>
+            </div>
+            <!-- subscription list -->
+            <div class="d-grid gap-3">
+                <div class="container bg-light border pt-2 pb-2">
+                    <div class="row">
+                        <div class="col-8">
+                            <h4><a href="">TnodeName | Hash</a></h4>
+                        </div>
+                        <div class="col d-flex justify-content-center">
+                            <button type="button" class="btn btn-danger">Unsubscribe</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="url" class="form-label">URL</label>
-                    <input type="text" class="form-control" id="url">
-                </div>
-                <div class="mb-3">
-                    <label for="subreddit" class="form-label">Subreddit</label>
-                    <input type="text" class="form-control" id="subreddit" required>
-                </div>
-                <div class="mb-3">
-                    <label for="text" class="form-label">Text</label>
-                    <textarea class="form-control" id="text"aria-describedby="textHelp"></textarea>
-                    <div id="textHelp" class="form-text">Extra things that you want to say about the post.</div>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+            </div>
         </main>
 
         <!-- Footer -->
@@ -82,4 +81,7 @@
             </footer>
         </div>
     </div>
+
+    <script src="js/script.js"></script>
+
 </body>

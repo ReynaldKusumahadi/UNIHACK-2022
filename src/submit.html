@@ -15,8 +15,10 @@
 
     <!-- CSS for footer -->
     <link href="css/footers.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
 
-    <title>Subreddit name - Distribuddit</title>
+    <title>Create a post - Distribuddit</title>
 </head>
 
 <body>
@@ -24,31 +26,39 @@
         <!-- header bar -->
         <div class="container">
             <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-                <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+                <a href="index.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
                     <span class="fs-4">Distribuddit</span>
                 </a>
 
                 <ul class="nav nav-pills">
-                    <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Subreddits</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Login</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Sign Up</a></li>
+                    <li class="nav-item"><a href="index.html" class="nav-link active" aria-current="page">Home</a></li>
+                    <li class="nav-item"><a href="newTopic.html" class="nav-link">New Tnode</a></li>
+                    <li class="nav-item"><a href="subscription.html" class="nav-link">Tnode</a></li>
+                    <li class="nav-item"><a href="explore.html" class="nav-link">Explore</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link logged-in" id="login-button">Connect Wallet</a></li>
                 </ul>
             </header>
         </div>
 
         <main>
-            <h1>Create a subreddit</h1>
+            <h1>Create a post</h1>
             <form>
                 <div class="mb-3">
-                    <label for="subredditName" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="subredditName" aria-describedby="subredditNameHelp" required>
-                    <div id="subredditNameHelp" class="form-text">Name should be between 3 and 20 characters long, and may contain letters A-Z, numbers 0-9 and symbols _ and -. Subreddit names are case-insensitive.</div>
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" required>
                 </div>
                 <div class="mb-3">
-                    <label for="description" class="form-label">Description</label>
-                    <textarea class="form-control" id="description" aria-describedby="descriptionHelp"></textarea>
-                    <div id="descriptionHelp" class="form-text">Tell people what this sibreddit is about.</div>
+                    <label for="url" class="form-label">URL</label>
+                    <input type="text" class="form-control" id="url">
+                </div>
+                <div class="mb-3">
+                    <label for="tnode" class="form-label">Tnode</label>
+                    <input type="text" class="form-control" id="tnode" required>
+                </div>
+                <div class="mb-3">
+                    <label for="text" class="form-label">Text</label>
+                    <textarea class="form-control" id="text"aria-describedby="textHelp"></textarea>
+                    <div id="textHelp" class="form-text">Extra things that you want to say about the post.</div>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
@@ -75,4 +85,17 @@
             </footer>
         </div>
     </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Hide class logged-in when the page loads
+        // When page loads
+        $(document).ready(function() {
+            document.getElementsByClassName("logged-in")[1].style.display = "none";
+            document.getElementsByClassName("logged-in")[0].style.display = "block";
+            console.log("Page loaded");
+        });
+
+    </script>
+
 </body>
