@@ -47,7 +47,7 @@ async function newTopic(){
                 c: title,
                 d: content
             });
-
+            window.location.href = "explore";
         }else{
             alert("Topic already exists!");
         }
@@ -184,9 +184,8 @@ function addRow(title, description,topicID){
     row.className = "row";
     var col8 = document.createElement("div");
     col8.className = "col-8";
-    var h4 = document.createElement("h4");
+    var h4 = document.createElement("h5");
     var a = document.createElement("a");
-    a.href = "#";
     a.innerHTML = title + " | " + description;
     h4.appendChild(a);
     col8.appendChild(h4);
@@ -228,6 +227,140 @@ function subscribe(topicTitle) {
 
     // Add to user's subscriptions
 
+}
+
+function fetchTnode(topicID) {
+    var topic = topicID;
+    var user = account;
+
+    gun.get('topics').map().on(function (data){
+        if (data.a == topic){
+            console.log("Match")
+            var topicName = data.c;
+            var topicDescription = data.d;
+            var owner = data.b;
+
+            var htmltitle = document.getElementById("topicTitle");
+            htmltitle.innerHTML = topicName;
+
+            var htmldescription = document.getElementById("topicDescription");
+            htmldescription.innerHTML = topicDescription;
+
+        }
+    });
+
+    // Add to user's subscriptions
+
+}
+
+function newPost(title,description,topicID){
+    var user = account;
+    var currentDateTime = new Date().toLocaleString();
+
+    var postHash = Math.abs(stringToHash(title+description+currentDateTime));
+    console.log(postHash);
+
+    if (user === null) {
+        alert("Please login to create a post");
+    } else {
+        gun.get('posts').get(postHash).put({postID: postHash, targetTopicID:topicID, authorID:account, title:title, content:description, dateTime: currentDateTime})
+    }
+
+}
+
+function fetchPosts(mode,topicID) { // If mode = -1, fetch all post, else fetch post from topicID
+
+        if (mode === -1) {
+
+        } else {
+            const postID = [];
+            const authorID = [];
+            const title = [];
+            const content = [];
+            const dateTime = [];
+            const targetTopicID = [];
+
+            gun.get('posts').map().on(function (data){
+                if (data.targetTopicID == topicID){
+
+                    postID.push(data.postID);
+                    authorID.push(data.authorID);
+                    title.push(data.title);
+                    content.push(data.content);
+                    dateTime.push(data.dateTime);
+                    targetTopicID.push(data.targetTopicID);
+
+                }
+            })
+
+            var uniquePostID = [...new Set(postID)];
+            var uniqueAuthorID = [...new Set(authorID)];
+            var uniqueTitle = [...new Set(title)];
+            var uniqueContent = [...new Set(content)];
+            var uniqueDateTime = [...new Set(dateTime)];
+            var uniqueTargetTopicID = [...new Set(targetTopicID)];
+
+            if (uniquePostID.length === 0){
+                alert("No posts found");
+            }else {
+                for (var i = 0; i<uniquePostID.length; i++){
+                    addPost(1,uniqueTitle[i],uniqueAuthorID[i],uniqueDateTime[i],uniqueContent[i],uniquePostID[i],uniqueTargetTopicID[i]);
+                }
+            }
+
+             // addPost(title,authorID,dateTime,content,5,postID);
+        }
+}
+
+function addPost(mode,title,author,time,content, postID, targetTopicID) {
+    var post = document.createElement("div");
+    post.className = "container bg-light border";
+    var row = document.createElement("div");
+    row.className = "row";
+    var col = document.createElement("div");
+    col.className = "col";
+    var link = document.createElement("a");
+    link.href = "post?postID="+postID;
+    link.className = "link-primary";
+    link.innerHTML = title;
+    col.appendChild(link);
+    row.appendChild(col);
+    post.appendChild(row);
+    row = document.createElement("div");
+    row.className = "row";
+    col = document.createElement("div");
+    col.className = "col";
+    var span = document.createElement("span");
+    small1 = document.createElement("small");
+    small1.innerHTML = "1234 comments";
+    span.appendChild(small1);
+    col.appendChild(span);
+    row.appendChild(col);
+    post.appendChild(row);
+    row = document.createElement("div");
+    row.className = "row";
+    col = document.createElement("div");
+    col.className = "col";
+
+    span = document.createElement("span");
+    small2 = document.createElement("small");
+    small2.innerHTML = "Posted by <a className=\"link-secondary\">"+author+"</a> on "+time;
+    span.appendChild(small2);
+    col.appendChild(span);
+    row.appendChild(col);
+    post.appendChild(row);
+    row = document.createElement("br");
+    post.appendChild(row);
+    row = document.createElement("div");
+    row.className = "row";
+    col = document.createElement("div");
+    col.className = "col";
+    var p = document.createElement("p");
+    p.innerHTML = content;
+    col.appendChild(p);
+    row.appendChild(col);
+    post.appendChild(row);
+    document.getElementById("posts").appendChild(post);
 }
 
 function stringToHash(string) {

@@ -53,6 +53,12 @@ def ajax(request):
     else:
         return HttpResponse('Failed')
 
+def submitPost(request):
+    if request.method == 'POST':
+        return HttpResponse('Success')
+    else:
+        return HttpResponse('Failed')
+
 
 
 # def post(request):
