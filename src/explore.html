@@ -19,7 +19,8 @@
     <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
 
-    <title>Tnode name - Distribuddit</title>
+
+    <title>Explore - Distribuddit</title>
 </head>
 
 <body>
@@ -41,22 +42,29 @@
             </header>
         </div>
 
-        <main>
+        <main id="topics">
             <p class="logged-in">Logged in with account: <span class="showAccount"></span></p>
-            <h1>Create a Tnode</h1>
-            <form>
-                <div class="mb-3">
-                    <label for="tnodeName" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="tnodeName" aria-describedby="tnodeNameHelp" required>
-                    <div id="tnodeNameHelp" class="form-text">Name should be between 3 and 20 characters long, and may contain letters A-Z, numbers 0-9 and symbols _ and -. Tnode names are case-insensitive.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="description" class="form-label">Description</label>
-                    <textarea class="form-control" id="description" aria-describedby="descriptionHelp"></textarea>
-                    <div id="descriptionHelp" class="form-text">Tell people what this topic is about.</div>
-                </div>
-                <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
-            </form>
+
+            <div class="container pb-5">
+                <h1>Explore</h1>
+            </div>
+            <!-- subscription list -->
+<!--            <div class="d-grid gap-3">-->
+<!--                <div class="container bg-light border pt-2 pb-2">-->
+<!--                    <div class="row">-->
+<!--                        <div class="col-8">-->
+<!--                            <h4><a href="">TnodeName | Hash</a></h4>-->
+<!--                        </div>-->
+<!--                        <div class="col d-flex justify-content-center">-->
+<!--                            <button type="button" class="btn btn-danger">Unsubscribe</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+
+
+
         </main>
 
         <!-- Footer -->
@@ -80,23 +88,19 @@
             </footer>
         </div>
     </div>
-
-    <script src="js/script.js"></script>
     <script>
         // Hide class logged-in when the page loads
         // When page loads
         $(document).ready(function() {
             document.getElementsByClassName("logged-in")[1].style.display = "none";
             document.getElementsByClassName("logged-in")[0].style.display = "block";
-            // On-click event on Submit button
-            const submitButton = document.getElementById("submitButton");
-            submitButton.addEventListener('click', () => {
-                newTopic();
-            });
-
             console.log("Page loaded");
+            exploreTopics();
         });
 
     </script>
+
+
+    <script src="js/script.js"></script>
 
 </body>

@@ -30,3 +30,7 @@
 .dropdown-toggle {
   outline: 0;
 }
+
+.d-grid{
+  margin-bottom: 20px;
+}
