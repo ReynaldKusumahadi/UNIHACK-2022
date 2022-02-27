@@ -11,7 +11,7 @@ gun = Gun(['http://localhost:8765/gun']);
 
 if (typeof window.ethereum !== 'undefined') {
     console.log('MetaMask is installed!');
-}
+} else{ alert('Install Metamask First!')};
 
 const ethereumButton = document.getElementById('login-button');
 const showAccount = document.querySelector('.showAccount');
@@ -20,7 +20,7 @@ ethereumButton.addEventListener('click', () => {
     getAccount();
 });
 let account;
-
+let address;
 async function getAccount() {
     const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
     account = accounts[0];
@@ -190,6 +190,10 @@ function addRow(title, description,topicID){
     button.type = "button";
     button.className = "btn btn-success";
     button.innerHTML = "Subscribe";
+    button.value = topicID;
+    button.onclick = function(){
+        subscribe(this.value);
+    };
     col.appendChild(button);
     row.appendChild(col8);
     row.appendChild(col);
@@ -198,19 +202,19 @@ function addRow(title, description,topicID){
     document.getElementById("topics").appendChild(div);
 }
 
-function subscribe(topicTitle) {
-    var user = account;
-    var topic = topicTitle;
-
-    if (user === null) {
-        alert("Please login to subscribe to a topic");
-    } else {
-        gun.get(user).get('').put({tnodeAddress: "Address2"})
-    }
-
-    // Add to user's subscriptions
-
-}
+// function subscribe(topicTitle) {
+//     var user = account;
+//     var topic = topicTitle;
+//
+//     if (user === null) {
+//         alert("Please login to subscribe to a topic");
+//     } else {
+//         gun.get(user).get('').put({tnodeAddress: "Address2"})
+//     }
+//
+//     // Add to user's subscriptions
+//
+// }
 
 function fetchTnode(topicID) {
     var topic = topicID;
@@ -355,24 +359,96 @@ function subscribe(topicID, userID){
     }
 }
 
-function fetchSubscriptions(userID){
-    if (userID === null) {
+async function fetchSubscriptions() {
+    if (account === null) {
         alert("Please login to subscribe");
     } else {
-        var sublist = "sublist-"+userID;
+        address = await window.ethereum.enable();
+        console.log("Fetching subscriptions");
+        var sublist = "sublist-" + account;
+        console.log(sublist)
 
-        const titles = [];
-        const descriptions = [];
-        const topicIDs = [];
-        gun.get('topics').map().on(function(data, description) {
-            if (data.a != null && data.c != null){
-                topicIDs.push(data.a);
-                titles.push(data.c);
-                descriptions.push(data.d);
+        const tNode = [];
+        const status = [];
+        gun.get(sublist).map().on(function (data) {
+            console.log(data)
+            if (data.status != null && data.tNode != null) {
+                tNode.push(data.tNode);
+                status.push(data.status);
             }
         })
 
+        var uniqueTNode = [...new Set(tNode)];
+        var uniqueStatus = [...new Set(status)];
+
+        for (var i = 0; i < uniqueTNode.length; i++) {
+            if (uniqueStatus[i] === true) {
+                // addSubscription(uniqueTNode[i]);
+                // addRow(uniqueTNode[i],"Active",userID);
+                console.log("UniqueNode" + uniqueTNode[i]);
+                addSubscripion(uniqueTNode[i],address);
+            }
+        }
+
     }
+}
+
+function addSubscripion(tNode,address){
+    var title;
+    var description;
+    gun.get('topics').map().on(function (data){
+         if (data.a == tNode){
+             console.log(data.c)
+             title = data.c;
+             description = data.d;
+         }
+    })
+
+    // Create div
+    var div = document.createElement("div");
+    div.className = "container bg-light border pt-2 pb-2";
+    var row = document.createElement("div");
+    row.className = "row";
+    var col = document.createElement("div");
+    col.className = "col-8";
+    var link = document.createElement("a");
+    link.href = "tnode?id="+tNode;
+    link.innerHTML = title + " | " + description;
+    col.appendChild(link);
+    row.appendChild(col);
+    col = document.createElement("div");
+    col.className = "col d-flex justify-content-center";
+    var button = document.createElement("button");
+    button.type = "button";
+    button.className = "btn btn-danger";
+    button.innerHTML = "Unsubscribe";
+    button.onclick = function(){
+        unsubscribe(tNode);
+  };
+    col.appendChild(button);
+    row.appendChild(col);
+    div.appendChild(row);
+    document.getElementById("subscriptions").appendChild(div);
+}
+
+async function unsubscribe(tNode,address) {
+    address = await window.ethereum.enable();
+    var sublist = "sublist-" + address;
+    gun.get(sublist).get(tNode).put({tNode: tNode, status: false});
+    console.log(tNode,address)
+    console.log("Unsubscribed");
+    // Reload page
+    // window.location.reload();
+}
+
+async function subscribe(tNode) {
+    address = await window.ethereum.enable();
+    var sublist = "sublist-" + address;
+    gun.get(sublist).get(tNode).put({tNode: tNode, status: true});
+    console.log(tNode,address)
+    console.log("Subscribed");
+    // Reload page
+    // window.location.reload();
 }
 
 function stringToHash(string) {
