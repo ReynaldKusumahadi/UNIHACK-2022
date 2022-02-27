@@ -258,6 +258,35 @@ function newPost(title,description,topicID){
 function fetchPosts(mode,topicID) { // If mode = -1, fetch all post, else fetch post from topicID
 
         if (mode === -1) {
+                        const postID = [];
+            const authorID = [];
+            const title = [];
+            const content = [];
+            const dateTime = [];
+            const targetTopicID = [];
+
+            gun.get('posts').map().on(function (data){
+                    postID.push(data.postID);
+                    authorID.push(data.authorID);
+                    title.push(data.title);
+                    content.push(data.content);
+                    dateTime.push(data.dateTime);
+                    targetTopicID.push(data.targetTopicID);
+            })
+
+            var uniquePostID = [...new Set(postID)];
+            var uniqueTitle = [...new Set(title)];
+            var uniqueContent = [...new Set(content)];
+            var uniqueDateTime = [...new Set(dateTime)];
+            var uniqueTargetTopicID = [...new Set(targetTopicID)];
+
+            if (uniquePostID.length === 0){
+                alert("No posts found");
+            }else {
+                for (var i = 0; i<uniquePostID.length; i++){
+                    addPost(-1,uniqueTitle[i],authorID[i],uniqueDateTime[i],uniqueContent[i],uniquePostID[i],uniqueTargetTopicID[i]);
+                }
+            }
 
         } else {
             const postID = [];
@@ -300,6 +329,17 @@ function fetchPosts(mode,topicID) { // If mode = -1, fetch all post, else fetch 
 }
 
 function addPost(mode,title,author,time,content, postID, targetTopicID) {
+
+    // Get name of topic from targetTopicID
+    var topicName
+    console.log(targetTopicID)
+    gun.get('topics').map().on(function (data){
+        console.log(data);
+        if (data.a == targetTopicID){
+            topicName = data.c;
+        }
+    })
+
     var post = document.createElement("div");
     post.className = "container bg-light border";
     var row = document.createElement("div");
@@ -313,6 +353,20 @@ function addPost(mode,title,author,time,content, postID, targetTopicID) {
     col.appendChild(link);
     row.appendChild(col);
     post.appendChild(row);
+
+    if (mode == -1){
+         row= document.createElement("div");
+        row.className = "row";
+        col = document.createElement("div");
+        col.className = "col";
+        col.innerHTML = ""+topicName;
+        col.href = "topic?topicID="+targetTopicID;
+        row.appendChild(col);
+        post.appendChild(row);
+    }
+
+
+
     row = document.createElement("div");
     row.className = "row";
     col = document.createElement("div");
@@ -350,14 +404,16 @@ function addPost(mode,title,author,time,content, postID, targetTopicID) {
     document.getElementById("posts").appendChild(post);
 }
 
-function subscribe(topicID, userID){
-    if (userID === null) {
-        alert("Please login to subscribe");
-    } else {
-        var sublist = "sublist-"+userID;
-        gun.get(sublist).get(topicID).put({tNode: topicID, status:true});
-    }
-}
+// function subscribe(topicID, userID){
+//     if (userID === null) {
+//         alert("Please login to subscribe");
+//     } else {
+//         var sublist = "sublist-"+userID;
+//         gun.get(sublist).get(topicID).put({tNode: topicID, status:true});
+//     }
+//     // redirect
+//     window.location.href = "subscription";
+// }
 
 // Run fetchSubscriptions() every 2 seconds
 // setInterval(fetchSubscriptions(), 2000);
@@ -383,10 +439,9 @@ async function fetchSubscriptions() {
         })
 
         var uniqueTNode = [...new Set(tNode)];
-        var uniqueStatus = [...new Set(status)];
 
         for (var i = 0; i < uniqueTNode.length; i++) {
-            if (uniqueStatus[i] === true) {
+            if (status[i] === true) {
                 // addSubscription(uniqueTNode[i]);
                 // addRow(uniqueTNode[i],"Active",userID);
                 console.log("UniqueNode" + uniqueTNode[i]);
@@ -442,7 +497,8 @@ async function unsubscribe(tNode,address) {
     console.log(tNode,address[0])
     console.log("Unsubscribed");
     // Reload page
-    // window.location.reload();
+    window.location.reload();
+    // window.location.href = "explore";
 }
 
 async function subscribe(tNode) {
@@ -453,6 +509,9 @@ async function subscribe(tNode) {
     console.log("Subscribed");
     // Reload page
     // window.location.reload();
+
+    // redirect to subscription page
+    window.location.href = "subscription";
 }
 
 function loadPost(postID){
