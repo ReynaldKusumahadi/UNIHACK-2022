@@ -5,20 +5,26 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-{% load static %}
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <!-- CSS for header -->
-    <link href="css/headers.css" rel="stylesheet">
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'distribuddit/css/headers.css' %}">
+        <link rel="stylesheet" href="{% static 'distribuddit/css/footers.css' %}">
+
+{#    <link href="css/headers.css" rel="stylesheet">#}
 
     <!-- CSS for footer -->
-    <link href="css/footers.css" rel="stylesheet">
+{#    <link href="css/footers.css" rel="stylesheet">#}
     <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
 
-    <title>User 0xc039c745468cb563be1fa5d7ec8af8e059659a2378fc4ce6d70643481432a0ce - Distribuddit</title>
+    {% csrf_token %}
+    <title>Explore - Distribuddit</title>
 </head>
 
 <body>
@@ -26,61 +32,43 @@
         <!-- header bar -->
         <div class="container">
             <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-                <a href="index.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+                <a href="index" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
                     <span class="fs-4">Distribuddit</span>
                 </a>
 
                 <ul class="nav nav-pills">
-                    <li class="nav-item"><a href="index.html" class="nav-link active" aria-current="page">Home</a></li>
-                    <li class="nav-item"><a href="newTopic.html" class="nav-link">New Tnode</a></li>
-                    <li class="nav-item"><a href="subscription.html" class="nav-link">Tnode</a></li>
-                    <li class="nav-item"><a href="explore.html" class="nav-link">Explore</a></li>
+                    <li class="nav-item"><a href="index" class="nav-link active" aria-current="page">Home</a></li>
+                    <li class="nav-item"><a href="newTopic" class="nav-link">New Tnode</a></li>
+                    <li class="nav-item"><a href="subscription" class="nav-link">Subscription</a></li>
+                    <li class="nav-item"><a href="explore" class="nav-link">Explore</a></li>
                     <li class="nav-item"><a href="#" class="nav-link logged-in" id="login-button">Connect Wallet</a></li>
                 </ul>
             </header>
         </div>
 
-        <main>
+        <main id="topics">
             <div class="container pb-5">
-                <div class="row">
-                    <div class="col">
-                        <h1>Display Name</h1>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <span>Username: 0xc039c745468cb563be1fa5d7ec8af8e059659a2378fc4ce6d70643481432a0ce</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <span>Posts: 1234</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <span>Comments: 1234</span>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col">
-                        <h2>About</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ipsum ante, ultrices quis
-                            ullamcorper id, mattis sit amet magna. Suspendisse eget risus quis magna mollis congue.</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <a href="#">Posts</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <a href="#">Comments</a>
-                    </div>
-                </div>
+                <h1>Explore</h1>
+                <small class="logged-in"><span class="showAccount"></span></small>
             </div>
+
+            <!-- subscription list -->
+<!--            <div class="d-grid gap-3">-->
+<!--                <div class="container bg-light border pt-2 pb-2">-->
+<!--                    <div class="row">-->
+<!--                        <div class="col-8">-->
+<!--                            <h4><a href="">TnodeName | Hash</a></h4>-->
+<!--                        </div>-->
+<!--                        <div class="col d-flex justify-content-center">-->
+<!--                            <button type="button" class="btn btn-danger">Unsubscribe</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+
+
+
         </main>
 
         <!-- Footer -->
@@ -91,7 +79,6 @@
                 <a href="/"
                     class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
                     <svg class="bi me-2" width="40" height="32">
-                        <use xlink:href="#bootstrap" />
                     </svg>
                 </a>
 
@@ -105,16 +92,37 @@
         </div>
     </div>
 
-    <script src="{% static "js/script.js" %}"></script>
+    <script src="{% static "distribuddit/js/script.js" %}"></script>
     <script>
         // Hide class logged-in when the page loads
         // When page loads
+
         $(document).ready(function() {
+            getAccount();
             document.getElementsByClassName("logged-in")[1].style.display = "none";
             document.getElementsByClassName("logged-in")[0].style.display = "block";
             console.log("Page loaded");
+            exploreTopics();
         });
 
+        function viewTnode(tnodeID){
+            $.ajax({
+                url: "/ajax/ajax/",
+                type: "POST",
+                headers: {'X-CSRFToken': csrftoken},
+                mode: 'same-origin',
+                data: {
+                    tnode: tnodeID
+                },
+                success: function(data) {
+                    console.log(data);
+                    window.location.href = "tnode" + "?id=" + tnodeID;
+                }
+            });
+        }
+
     </script>
+
+
 
 </body>
