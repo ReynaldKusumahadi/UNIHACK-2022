@@ -7,6 +7,8 @@ Done by: Stackoverflow Enjoyers
 
 Live demo: https://distribuddit.herokuapp.com/
 
+You will need a Metamask browser extension to use Distribuddit. Get it here: https://metamask.io/download/
+
 Members:
 1. Reynald Kusumahadi   **(Monash University)**
 2. Akbar Fadiansyah     **(Monash University)**
