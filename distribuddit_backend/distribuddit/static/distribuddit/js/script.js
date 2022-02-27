@@ -50,7 +50,7 @@ async function newTopic(){
     if (publicAddress== null)  {
         alert("Please login to MetaMask first!");
     } else{
-        var topicID = stringToHash(title);
+        var topicID = Math.abs(stringToHash(title));
         var search = searchTopic(title);
         if(search.error){ // It is a new topic
             gun.get('topics').get(title).put({ // title can be hash too
@@ -359,13 +359,17 @@ function subscribe(topicID, userID){
     }
 }
 
+// Run fetchSubscriptions() every 2 seconds
+// setInterval(fetchSubscriptions(), 2000);
+
+
 async function fetchSubscriptions() {
     if (account === null) {
         alert("Please login to subscribe");
     } else {
         address = await window.ethereum.enable();
         console.log("Fetching subscriptions");
-        var sublist = "sublist-" + account;
+        var sublist = "sublist-" + address[0];
         console.log(sublist)
 
         const tNode = [];
@@ -386,7 +390,7 @@ async function fetchSubscriptions() {
                 // addSubscription(uniqueTNode[i]);
                 // addRow(uniqueTNode[i],"Active",userID);
                 console.log("UniqueNode" + uniqueTNode[i]);
-                addSubscripion(uniqueTNode[i],address);
+                addSubscripion(uniqueTNode[i],address[i]);
             }
         }
 
@@ -435,7 +439,7 @@ async function unsubscribe(tNode,address) {
     address = await window.ethereum.enable();
     var sublist = "sublist-" + address;
     gun.get(sublist).get(tNode).put({tNode: tNode, status: false});
-    console.log(tNode,address)
+    console.log(tNode,address[0])
     console.log("Unsubscribed");
     // Reload page
     // window.location.reload();
@@ -445,10 +449,151 @@ async function subscribe(tNode) {
     address = await window.ethereum.enable();
     var sublist = "sublist-" + address;
     gun.get(sublist).get(tNode).put({tNode: tNode, status: true});
-    console.log(tNode,address)
+    console.log(tNode,address[0])
     console.log("Subscribed");
     // Reload page
     // window.location.reload();
+}
+
+function loadPost(postID){
+    console.log(postID);
+    var title;
+    var description;
+    var content;
+    var userID;
+    var topicID;
+    var timestamp;
+    gun.get('posts').map().on(function (data){
+        console.log(data.postID)
+        if (data.postID == postID){
+            title = data.title;
+            description = data.content;
+            timestamp = data.dateTime;
+            userID = data.authorID;
+
+        }
+    })
+
+    var posttitle = document.getElementById("title");
+    var postdescription = document.getElementById("postContent");
+    var postdate = document.getElementById("dateTime");
+    var postuserID = document.getElementById("userAddress");
+    var postcomment = document.getElementById("commentNo");
+
+    posttitle.innerHTML = title;
+    postdescription.innerHTML = description;
+    postdate.innerHTML = timestamp;
+    postuserID.innerHTML = userID;
+    postcomment.innerHTML = "Comment: " + 0;
+
+
+}
+
+async function submitComment(commentText,postID){
+    address = await window.ethereum.enable();
+    userID = address[0];
+    var currentDateTime = new Date().toLocaleString();
+
+    var commentID = Math.abs(stringToHash(commentText+postID+currentDateTime));
+
+    if (address != null){
+        gun.get('comments').get(postID).get(commentID).put({authorID:userID, comment: commentText, dateTime:currentDateTime, commentID: commentID})
+    }
+    else{
+        alert("Please login to comment");
+    }
+    //reload page
+    window.location.reload();
+}
+
+function fetchComments(topicID){
+    gun.get('comments').get(topicID).map().on(function(data){console.log(data.comment)})
+
+    const comments = [];
+    const userID = [];
+    const dateTime = [];
+    const commentID = [];
+
+    gun.get('comments').get(topicID).map().on(function(data){
+        comments.push(data.comment);
+        userID.push(data.authorID);
+        dateTime.push(data.dateTime);
+        commentID.push(data.commentID);
+    })
+
+    var uniqueComments = [...new Set(comments)];
+    var uniqueUserID = [...new Set(userID)];
+    var uniqueDateTime = [...new Set(dateTime)];
+    var uniqueCommentID = [...new Set(commentID)];
+
+    console.log(uniqueComments);
+    console.log(uniqueUserID);
+    console.log(uniqueDateTime);
+    console.log(uniqueCommentID);
+
+    // Loop through comments
+
+     if (uniqueCommentID.length === 0){
+        alert("No comments found!");
+    } else {
+        for (var i = 0; i < uniqueCommentID.length; i++) {
+            var oComment = uniqueComments[i];
+            var oUserID = uniqueUserID[i];
+            var oDateTime = uniqueDateTime[i];
+            var oCommentID = uniqueCommentID[i];
+            loadComments(oComment,oUserID,oDateTime,oCommentID);
+     }
+}
+}
+
+function loadComments(comment,userID,datetime,commentID){
+    console.log(comment,userID,datetime,commentID);
+    // <div className="container bg-light border">
+    //     <div className="row">
+    //                     <span><small><a href="#"
+    //                                     className="link-secondary">0x840b25afae02dae485f6bf9dedacb0973e6ca2f8eb675000b7895a0420aac4a2</a>
+    //                             | 30 minutes ago</small></span>
+    //     </div>
+    //     <div className="row">
+    //         <div className="col">
+    //             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ipsum ante, ultrices quis
+    //             ullamcorper id, mattis sit amet magna. Suspendisse eget risus quis magna mollis congue.
+    //             Mauris non ligula in massa lacinia tincidunt eget vel lacus. Vestibulum vel mollis dolor.
+    //             Fusce ullamcorper purus nec arcu sagittis condimentum. Nunc mattis aliquet enim quis
+    //             rhoncus. Morbi lacus mi, dictum vitae finibus ac, dignissim ut ex. Sed feugiat, felis eu
+    //             molestie aliquam, lorem ligula elementum orci, ut fringilla odio lorem vitae augue. Nulla
+    //             efficitur tellus vel finibus sodales. Nam ipsum elit, iaculis a augue sodales, tincidunt
+    //             facilisis est. Duis ac mattis purus, eget suscipit mauris. Nulla leo eros, ultricies ac quam
+    //             nec, ultricies auctor nibh.
+    //         </div>
+    //     </div>
+    // </div>
+
+    var commentDiv = document.createElement("div");
+    commentDiv.className = "container bg-light border";
+    var rowDiv = document.createElement("div");
+    rowDiv.className = "row";
+    var colDiv = document.createElement("div");
+    colDiv.className = "col";
+    var spanDiv = document.createElement("span");
+
+    var smallDiv = document.createElement("small");
+    var linkDiv = document.createElement("a");
+    linkDiv.href = "#";
+    linkDiv.className = "link-secondary";
+    linkDiv.innerHTML = userID;
+    var dateDiv = document.createElement("span");
+    dateDiv.innerHTML = " | " + datetime;
+    smallDiv.appendChild(linkDiv);
+    smallDiv.appendChild(dateDiv);
+    spanDiv.appendChild(smallDiv);
+    rowDiv.appendChild(spanDiv);
+    colDiv.innerHTML = comment;
+    rowDiv.appendChild(colDiv);
+    commentDiv.appendChild(rowDiv);
+    document.getElementById("comments").appendChild(commentDiv);
+
+
 }
 
 function stringToHash(string) {
