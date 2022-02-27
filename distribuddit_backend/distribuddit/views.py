@@ -1,9 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 
 # Create your views here.
+def index_redirect(request):
+    return redirect('index')
+
+
 def index(request):
     page_title = 'index'
     context = {'page_title': page_title}

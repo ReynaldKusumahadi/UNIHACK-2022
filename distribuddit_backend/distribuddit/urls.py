@@ -3,6 +3,7 @@ from . import views
 
 
 urlpatterns = [
+    path('', views.index_redirect, name='index_redirect'),
     path('index', views.index, name='index'),
     path('explore', views.explore, name='explore'),
     path('tnode', views.tnode, name='tnode'),
