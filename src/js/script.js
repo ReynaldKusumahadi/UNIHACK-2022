@@ -38,7 +38,7 @@ async function newTopic(){
     if (publicAddress== null)  {
         alert("Please login to MetaMask first!");
     } else{
-        var topicID = stringToHash(title);
+        var topicID = Math.abs(stringToHash(title));
         var search = searchTopic(title);
         if(search.error){ // It is a new topic
             gun.get('topics').get(title).put({ // title can be hash too

@@ -1,6 +1,6 @@
 // gun = Gun(['http://localhost:8765/gun','https://gun-server-unihack.herokuapp.com/gun']);
-gun = Gun(['http://localhost:8765/gun']);
-
+// gun = Gun(['http://localhost:8765/gun']);
+gun = Gun(['https://gun-server-unihack.herokuapp.com/gun','https://distribuddit-gun.herokuapp.com/']);
 // gun = Gun();
 // copy = gun.get('test').get('paste');
 // paste = document.getElementById('paste');
@@ -50,7 +50,7 @@ async function newTopic(){
     if (publicAddress== null)  {
         alert("Please login to MetaMask first!");
     } else{
-        var topicID = stringToHash(title);
+        var topicID = Math.abs(stringToHash(title));
         var search = searchTopic(title);
         if(search.error){ // It is a new topic
             gun.get('topics').get(title).put({ // title can be hash too
@@ -64,6 +64,7 @@ async function newTopic(){
             alert("Topic already exists!");
         }
     }
+    window.location.href = "explore";
     // const topic = gun.get('topics').get(title);
     //
     // console.log(title);
@@ -159,6 +160,7 @@ function exploreTopics(){
 }
 
 function addRow(title, description,topicID){
+
     var div = document.createElement("div");
     div.className = "d-grid gap-3";
     var container = document.createElement("div");
@@ -177,6 +179,7 @@ function addRow(title, description,topicID){
 
     var button2 = document.createElement("button");
     button2.type = "button";
+
     button2.className = "btn btn-primary";
     button2.value = topicID;
     button2.id = "viewTnode";
@@ -188,8 +191,8 @@ function addRow(title, description,topicID){
 
     var button = document.createElement("button");
     button.type = "button";
-    button.className = "btn btn-success";
-    button.innerHTML = "Subscribe";
+        button.className = "btn btn-success";
+        button.innerHTML = "Subscribe";
     button.value = topicID;
     button.onclick = function(){
         subscribe(this.value);
@@ -258,6 +261,35 @@ function newPost(title,description,topicID){
 function fetchPosts(mode,topicID) { // If mode = -1, fetch all post, else fetch post from topicID
 
         if (mode === -1) {
+                        const postID = [];
+            const authorID = [];
+            const title = [];
+            const content = [];
+            const dateTime = [];
+            const targetTopicID = [];
+
+            gun.get('posts').map().on(function (data){
+                    postID.push(data.postID);
+                    authorID.push(data.authorID);
+                    title.push(data.title);
+                    content.push(data.content);
+                    dateTime.push(data.dateTime);
+                    targetTopicID.push(data.targetTopicID);
+            })
+
+            var uniquePostID = [...new Set(postID)];
+            var uniqueTitle = [...new Set(title)];
+            var uniqueContent = [...new Set(content)];
+            var uniqueDateTime = [...new Set(dateTime)];
+            var uniqueTargetTopicID = [...new Set(targetTopicID)];
+
+            if (uniquePostID.length === 0){
+                alert("No posts found");
+            }else {
+                for (var i = 0; i<uniquePostID.length; i++){
+                    addPost(-1,uniqueTitle[i],authorID[i],uniqueDateTime[i],uniqueContent[i],uniquePostID[i],uniqueTargetTopicID[i]);
+                }
+            }
 
         } else {
             const postID = [];
@@ -300,6 +332,17 @@ function fetchPosts(mode,topicID) { // If mode = -1, fetch all post, else fetch 
 }
 
 function addPost(mode,title,author,time,content, postID, targetTopicID) {
+
+    // Get name of topic from targetTopicID
+    var topicName
+    console.log(targetTopicID)
+    gun.get('topics').map().on(function (data){
+        console.log(data);
+        if (data.a == targetTopicID){
+            topicName = data.c;
+        }
+    })
+
     var post = document.createElement("div");
     post.className = "container bg-light border";
     var row = document.createElement("div");
@@ -313,6 +356,20 @@ function addPost(mode,title,author,time,content, postID, targetTopicID) {
     col.appendChild(link);
     row.appendChild(col);
     post.appendChild(row);
+
+    if (mode == -1){
+         row= document.createElement("div");
+        row.className = "row";
+        col = document.createElement("div");
+        col.className = "col";
+        col.innerHTML = ""+topicName;
+        col.href = "topic?topicID="+targetTopicID;
+        row.appendChild(col);
+        post.appendChild(row);
+    }
+
+
+
     row = document.createElement("div");
     row.className = "row";
     col = document.createElement("div");
@@ -331,7 +388,7 @@ function addPost(mode,title,author,time,content, postID, targetTopicID) {
 
     span = document.createElement("span");
     small2 = document.createElement("small");
-    small2.innerHTML = "Posted by <a className=\"link-secondary\">"+author+"</a> on "+time;
+    small2.innerHTML = "Posted by <a className=\"link-secondary\">"+author+"</a>  on "+time;
     span.appendChild(small2);
     col.appendChild(span);
     row.appendChild(col);
@@ -350,14 +407,20 @@ function addPost(mode,title,author,time,content, postID, targetTopicID) {
     document.getElementById("posts").appendChild(post);
 }
 
-function subscribe(topicID, userID){
-    if (userID === null) {
-        alert("Please login to subscribe");
-    } else {
-        var sublist = "sublist-"+userID;
-        gun.get(sublist).get(topicID).put({tNode: topicID, status:true});
-    }
-}
+// function subscribe(topicID, userID){
+//     if (userID === null) {
+//         alert("Please login to subscribe");
+//     } else {
+//         var sublist = "sublist-"+userID;
+//         gun.get(sublist).get(topicID).put({tNode: topicID, status:true});
+//     }
+//     // redirect
+//     window.location.href = "subscription";
+// }
+
+// Run fetchSubscriptions() every 2 seconds
+// setInterval(fetchSubscriptions(), 2000);
+
 
 async function fetchSubscriptions() {
     if (account === null) {
@@ -365,7 +428,7 @@ async function fetchSubscriptions() {
     } else {
         address = await window.ethereum.enable();
         console.log("Fetching subscriptions");
-        var sublist = "sublist-" + account;
+        var sublist = "sublist-" + address[0];
         console.log(sublist)
 
         const tNode = [];
@@ -379,14 +442,13 @@ async function fetchSubscriptions() {
         })
 
         var uniqueTNode = [...new Set(tNode)];
-        var uniqueStatus = [...new Set(status)];
 
         for (var i = 0; i < uniqueTNode.length; i++) {
-            if (uniqueStatus[i] === true) {
+            if (status[i] === true) {
                 // addSubscription(uniqueTNode[i]);
                 // addRow(uniqueTNode[i],"Active",userID);
                 console.log("UniqueNode" + uniqueTNode[i]);
-                addSubscripion(uniqueTNode[i],address);
+                addSubscripion(uniqueTNode[i],address[i]);
             }
         }
 
@@ -435,20 +497,164 @@ async function unsubscribe(tNode,address) {
     address = await window.ethereum.enable();
     var sublist = "sublist-" + address;
     gun.get(sublist).get(tNode).put({tNode: tNode, status: false});
-    console.log(tNode,address)
+    console.log(tNode,address[0])
     console.log("Unsubscribed");
     // Reload page
-    // window.location.reload();
+    window.location.reload();
+    // window.location.href = "explore";
 }
 
-async function subscribe(tNode) {
-    address = await window.ethereum.enable();
-    var sublist = "sublist-" + address;
+function subscribe(tNode) {
+    var sublist = "sublist-" + account;
     gun.get(sublist).get(tNode).put({tNode: tNode, status: true});
-    console.log(tNode,address)
+    console.log(tNode,account)
     console.log("Subscribed");
     // Reload page
     // window.location.reload();
+
+    // redirect to subscription page
+    window.location.href = "subscription";
+}
+
+function loadPost(postID){
+    console.log(postID);
+    var title;
+    var description;
+    var content;
+    var userID;
+    var topicID;
+    var timestamp;
+    gun.get('posts').map().on(function (data){
+        console.log(data.postID)
+        if (data.postID == postID){
+            title = data.title;
+            description = data.content;
+            timestamp = data.dateTime;
+            userID = data.authorID;
+
+        }
+    })
+
+    var posttitle = document.getElementById("title");
+    var postdescription = document.getElementById("postContent");
+    var postdate = document.getElementById("dateTime");
+    var postuserID = document.getElementById("userAddress");
+    var postcomment = document.getElementById("commentNo");
+
+    posttitle.innerHTML = title;
+    postdescription.innerHTML = description;
+    postdate.innerHTML = timestamp;
+    postuserID.innerHTML = userID;
+    postcomment.innerHTML = "Comment: " + commentCounter(postID);
+
+
+}
+
+async function submitComment(commentText,postID){
+    address = await window.ethereum.enable();
+    userID = address[0];
+    var currentDateTime = new Date().toLocaleString();
+
+    var commentID = Math.abs(stringToHash(commentText+postID+currentDateTime));
+
+    if (address != null){
+        gun.get('comments').get(postID).get(commentID).put({authorID:userID, comment: commentText, dateTime:currentDateTime, commentID: commentID})
+    }
+    else{
+        alert("Please login to comment");
+    }
+    //reload page
+    window.location.reload();
+}
+
+function fetchComments(topicID){
+    gun.get('comments').get(topicID).map().on(function(data){console.log(data.comment)})
+
+    const comments = [];
+    const userID = [];
+    const dateTime = [];
+    const commentID = [];
+
+    gun.get('comments').get(topicID).map().on(function(data){
+        comments.push(data.comment);
+        userID.push(data.authorID);
+        dateTime.push(data.dateTime);
+        commentID.push(data.commentID);
+    })
+
+    var uniqueComments = [...new Set(comments)];
+    var uniqueUserID = [...new Set(userID)];
+    var uniqueDateTime = [...new Set(dateTime)];
+    var uniqueCommentID = [...new Set(commentID)];
+
+    console.log(uniqueComments);
+    console.log(uniqueUserID);
+    console.log(uniqueDateTime);
+    console.log(uniqueCommentID);
+
+    // Loop through comments
+
+     if (uniqueCommentID.length === 0){
+        alert("No comments found!");
+    } else {
+        for (var i = 0; i < uniqueCommentID.length; i++) {
+            var oComment = uniqueComments[i];
+            var oUserID = uniqueUserID[i];
+            var oDateTime = uniqueDateTime[i];
+            var oCommentID = uniqueCommentID[i];
+            loadComments(oComment,oUserID,oDateTime,oCommentID);
+     }
+}
+}
+
+function loadComments(comment,userID,datetime,commentID){
+    console.log(comment,userID,datetime,commentID);
+    // <div className="container bg-light border">
+    //     <div className="row">
+    //                     <span><small><a href="#"
+    //                                     className="link-secondary">0x840b25afae02dae485f6bf9dedacb0973e6ca2f8eb675000b7895a0420aac4a2</a>
+    //                             | 30 minutes ago</small></span>
+    //     </div>
+    //     <div className="row">
+    //         <div className="col">
+    //             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ipsum ante, ultrices quis
+    //             ullamcorper id, mattis sit amet magna. Suspendisse eget risus quis magna mollis congue.
+    //             Mauris non ligula in massa lacinia tincidunt eget vel lacus. Vestibulum vel mollis dolor.
+    //             Fusce ullamcorper purus nec arcu sagittis condimentum. Nunc mattis aliquet enim quis
+    //             rhoncus. Morbi lacus mi, dictum vitae finibus ac, dignissim ut ex. Sed feugiat, felis eu
+    //             molestie aliquam, lorem ligula elementum orci, ut fringilla odio lorem vitae augue. Nulla
+    //             efficitur tellus vel finibus sodales. Nam ipsum elit, iaculis a augue sodales, tincidunt
+    //             facilisis est. Duis ac mattis purus, eget suscipit mauris. Nulla leo eros, ultricies ac quam
+    //             nec, ultricies auctor nibh.
+    //         </div>
+    //     </div>
+    // </div>
+
+    var commentDiv = document.createElement("div");
+    commentDiv.className = "container bg-light border";
+    var rowDiv = document.createElement("div");
+    rowDiv.className = "row";
+    var colDiv = document.createElement("div");
+    colDiv.className = "col";
+    var spanDiv = document.createElement("span");
+
+    var smallDiv = document.createElement("small");
+    var linkDiv = document.createElement("a");
+    linkDiv.href = "#";
+    linkDiv.className = "link-secondary";
+    linkDiv.innerHTML = userID;
+    var dateDiv = document.createElement("span");
+    dateDiv.innerHTML = " | " + datetime;
+    smallDiv.appendChild(linkDiv);
+    smallDiv.appendChild(dateDiv);
+    spanDiv.appendChild(smallDiv);
+    rowDiv.appendChild(spanDiv);
+    colDiv.innerHTML = comment;
+    rowDiv.appendChild(colDiv);
+    commentDiv.appendChild(rowDiv);
+    document.getElementById("comments").appendChild(commentDiv);
+
+
 }
 
 function stringToHash(string) {
@@ -462,6 +668,28 @@ function stringToHash(string) {
     return hash;
 }
 
+function commentCounter(postID){
+    const commentID = [];
+    gun.get('comments').get(postID).map().on(function(data){
+        commentID.push(data.commentID);
+    })
+    uniqueCommentID = [...new Set(commentID)];
+    return uniqueCommentID.length;
+}
+function subscriptionStatus(topicID){
+    var result;
+    var sublist = "sublist-" + account;
+    gun.get(sublist).map().on(function(data){
+        if (topicID == data.tNode){
+            if (data.status == true){
+                result = 1
+            } else {result = 0}
+        } else {
+            result = 0;
+        }
+    })
+    return result;
+}
 
 // Ajax call when button with id viewTnode is clicked, pass value of the clicked button to the function
 function getCookie(name) {

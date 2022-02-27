@@ -12,7 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- CSS for header -->
     <link href="css/headers.css" rel="stylesheet">
-
+    {% load static %}
     <!-- CSS for footer -->
     <link href="css/footers.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
@@ -43,76 +43,22 @@
         <main>
             <!-- A brief title section -->
             <div class="container pb-5">
-                <p class="logged-in">Logged in with account: <span class="showAccount"></span></p>
                 <h1>Distribuddit</h1>
+                <small class="logged-in"><span class="showAccount"></span></small>
+
                 <p>A decentralised alternative to Reddit. Control your opinions online. Express your thoughts freely without fears of censorship.</p>
-                <a href="post" class="btn btn-primary">Create a post</a>
+                <a href="explore" class="btn btn-primary">Explore Topics</a>
 <!--                <button class="enableEthereumButton">Enable Ethereum</button>-->
 
 <!--                <textarea id="paste"></textarea>-->
             </div>
             <!-- Post list -->
-            <div class="d-grid gap-3">
-                <!-- An example of a post entry -->
-                <div class="container bg-light border">
-                    <div class="row">
-                        <div class="col">
-                            <a href="#" class="link-primary">Post title</a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <span><small>1234 points | <a href="post" class="link-secondary">1234 comments</a></small></span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <span><small>Posted by <a href="#" class="link-secondary">0xc039c745468cb563be1fa5d7ec8af8e059659a2378fc4ce6d70643481432a0ce</a> 3
-                                    hours ago</small></span>
-                        </div>
-                    </div>
-                </div>
+                <div class="container pb-5">
+                    <h3><strong>Recent Posts: </strong></h3>
+            <div class="d-grid gap-3" id="posts">
 
-                <!-- Some more example posts -->
-                <div class="container bg-light border">
-                    <div class="row">
-                        <div class="col">
-                            <a href="https://github.com/megascrapper/ourairports_api" class="link-primary">Check out
-                                this
-                                thing I made a while back</a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <span><small>1234 points | 1234 comments</small></span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <span><small>Posted by <a href="#" class="link-secondary">0xc039c745468cb563be1fa5d7ec8af8e059659a2378fc4ce6d70643481432a0ce</a> 3
-                                    hours ago</small></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="container bg-light border">
-                    <div class="row">
-                        <div class="col">
-                            <a href="https://github.com/ReynaldKusumahadi/UNIHACK-2022" class="link-primary">What are we making again?</a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <span><small>1234 points | 1234 comments</small></span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <span><small>Posted by <a href="#" class="link-secondary">0xc039c745468cb563be1fa5d7ec8af8e059659a2378fc4ce6d70643481432a0ce</a> 3
-                                    hours ago</small></span>
-                        </div>
-                    </div>
             </div>
+
             </div>
         </main>
 
@@ -137,8 +83,7 @@
             </footer>
         </div>
     </div>
-    {% load static %}
-    <script src="{% static "js/script.js" %}"></script>
+    <script src="{% static "distribuddit/js/script.js" %}"></script>
     <script>
         // Hide class logged-in when the page loads
         // When page loads
@@ -146,6 +91,7 @@
             document.getElementsByClassName("logged-in")[1].style.display = "none";
             document.getElementsByClassName("logged-in")[0].style.display = "block";
             console.log("Page loaded");
+            fetchPosts(-1,null)
         });
 
     </script>
