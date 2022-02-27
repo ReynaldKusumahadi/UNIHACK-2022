@@ -564,7 +564,7 @@ async function submitComment(commentText,postID){
         alert("Please login to comment");
     }
     //reload page
-    window.location.reload();
+    window.location.href = "post?id="+postID;
 }
 
 function fetchComments(topicID){
