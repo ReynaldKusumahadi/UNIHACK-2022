@@ -376,7 +376,8 @@ function addPost(mode,title,author,time,content, postID, targetTopicID) {
     col.className = "col";
     var span = document.createElement("span");
     small1 = document.createElement("small");
-    small1.innerHTML = "1234 comments";
+    var ncomments = commentCounter(postID)
+    small1.innerHTML = ncomments + " comments";
     span.appendChild(small1);
     col.appendChild(span);
     row.appendChild(col);
