@@ -52,24 +52,24 @@
                     <small class="logged-in"><span class="showAccount"></span></small>
                 </div>
 
-                <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <span class="d-flex justify-content-center display-4">1234</span>
-                        </div>
-                        <div class="col">
-                            <span class="d-flex justify-content-center display-4">1234</span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <span class="d-flex justify-content-center">Subscribers</span>
-                        </div>
-                        <div class="col">
-                            <span class="d-flex justify-content-center">Online</span>
-                        </div>
-                    </div>
-                </div>
+{#                <div class="container">#}
+{#                    <div class="row">#}
+{#                        <div class="col">#}
+{#                            <span class="d-flex justify-content-center display-4">1234</span>#}
+{#                        </div>#}
+{#                        <div class="col">#}
+{#                            <span class="d-flex justify-content-center display-4">1234</span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="row">#}
+{#                        <div class="col">#}
+{#                            <span class="d-flex justify-content-center">Subscribers</span>#}
+{#                        </div>#}
+{#                        <div class="col">#}
+{#                            <span class="d-flex justify-content-center">Online</span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
                 <div class="container">
                     <h2>About</h2>
                     <p id="topicDescription">-</p>
@@ -78,7 +78,8 @@
                 <div class="container">
                 <div class="row" style="text-align: center" id="sub-button">
                     <div class="col"><a href="#" class="btn btn-primary" id="create" style="width: 80%">Create a post</a></div>
-{#                    <div class="col"> <a href="#" class="btn btn-success" id="subscribe" style="width: 80%">Subscribe</a></div>#}
+                    <div class="col"> <a href="#" class="btn btn-success" id="subscribe" style="width: 80%" onclick="subscribe(paramValue)">Subscribe</a></div>
+                    <div class="col"> <a href="#" class="btn btn-danger" id="unsubscribe" style="width: 80%" onclick="unsubscribe(paramValue)">Unsubscribe</a></div>
                  </div>
                 </div>
 
@@ -116,6 +117,7 @@
     <script>
         // Hide class logged-in when the page loads
         // When page loads
+        var paramValue
         $(document).ready(function() {
             getAccount();
             document.getElementsByClassName("logged-in")[1].style.display = "none";
@@ -123,31 +125,12 @@
             console.log("Page loaded");
             var url_string = window.location.href;
             var url = new URL(url_string);
-            var paramValue = url.searchParams.get("id");
+            paramValue = url.searchParams.get("id");
             fetchTnode(paramValue);
             var button = document.getElementById("create");
             button.href = "submit?id=" + paramValue;
             fetchPosts(1, paramValue);
             console.log(account);
-            if (account == "") {
-
-            } else {
-                // <div class="col"> <a href="#" class="btn btn-success" id="subscribe" style="width: 80%">Subscribe</a></div>
-                // Create div element
-                var div = document.createElement("div");
-                div.className = "col";
-                div.style.textAlign = "center";
-                // Create a button element
-                var button = document.createElement("a");
-                button.className = "btn btn-success";
-                button.id = "subscribe";
-                button.style.width = "80%";
-                button.innerHTML = "Subscribe";
-                // Append button to div
-                div.appendChild(button);
-                // Append div to row
-                document.getElementById("sub-button").appendChild(div);
-            }
 
         });
 

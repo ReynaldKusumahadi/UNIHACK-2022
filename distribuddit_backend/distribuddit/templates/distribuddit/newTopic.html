@@ -83,6 +83,7 @@
         // Hide class logged-in when the page loads
         // When page loads
         $(document).ready(function() {
+            getAccount();
             document.getElementsByClassName("logged-in")[1].style.display = "none";
             document.getElementsByClassName("logged-in")[0].style.display = "block";
             // On-click event on Submit button

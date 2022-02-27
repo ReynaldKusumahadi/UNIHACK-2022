@@ -1,6 +1,6 @@
 // gun = Gun(['http://localhost:8765/gun','https://gun-server-unihack.herokuapp.com/gun']);
-gun = Gun(['http://localhost:8765/gun']);
-
+// gun = Gun(['http://localhost:8765/gun']);
+gun = Gun(['https://gun-server-unihack.herokuapp.com/gun','https://distribuddit-gun.herokuapp.com/']);
 // gun = Gun();
 // copy = gun.get('test').get('paste');
 // paste = document.getElementById('paste');
@@ -64,6 +64,7 @@ async function newTopic(){
             alert("Topic already exists!");
         }
     }
+    window.location.href = "explore";
     // const topic = gun.get('topics').get(title);
     //
     // console.log(title);
@@ -159,6 +160,7 @@ function exploreTopics(){
 }
 
 function addRow(title, description,topicID){
+
     var div = document.createElement("div");
     div.className = "d-grid gap-3";
     var container = document.createElement("div");
@@ -177,6 +179,7 @@ function addRow(title, description,topicID){
 
     var button2 = document.createElement("button");
     button2.type = "button";
+
     button2.className = "btn btn-primary";
     button2.value = topicID;
     button2.id = "viewTnode";
@@ -188,8 +191,8 @@ function addRow(title, description,topicID){
 
     var button = document.createElement("button");
     button.type = "button";
-    button.className = "btn btn-success";
-    button.innerHTML = "Subscribe";
+        button.className = "btn btn-success";
+        button.innerHTML = "Subscribe";
     button.value = topicID;
     button.onclick = function(){
         subscribe(this.value);
@@ -385,7 +388,7 @@ function addPost(mode,title,author,time,content, postID, targetTopicID) {
 
     span = document.createElement("span");
     small2 = document.createElement("small");
-    small2.innerHTML = "Posted by <a className=\"link-secondary\">"+author+"</a> on "+time;
+    small2.innerHTML = "Posted by <a className=\"link-secondary\">"+author+"</a>  on "+time;
     span.appendChild(small2);
     col.appendChild(span);
     row.appendChild(col);
@@ -501,11 +504,10 @@ async function unsubscribe(tNode,address) {
     // window.location.href = "explore";
 }
 
-async function subscribe(tNode) {
-    address = await window.ethereum.enable();
-    var sublist = "sublist-" + address;
+function subscribe(tNode) {
+    var sublist = "sublist-" + account;
     gun.get(sublist).get(tNode).put({tNode: tNode, status: true});
-    console.log(tNode,address[0])
+    console.log(tNode,account)
     console.log("Subscribed");
     // Reload page
     // window.location.reload();
@@ -543,7 +545,7 @@ function loadPost(postID){
     postdescription.innerHTML = description;
     postdate.innerHTML = timestamp;
     postuserID.innerHTML = userID;
-    postcomment.innerHTML = "Comment: " + 0;
+    postcomment.innerHTML = "Comment: " + commentCounter(postID);
 
 
 }
@@ -666,6 +668,28 @@ function stringToHash(string) {
     return hash;
 }
 
+function commentCounter(postID){
+    const commentID = [];
+    gun.get('comments').get(postID).map().on(function(data){
+        commentID.push(data.commentID);
+    })
+    uniqueCommentID = [...new Set(commentID)];
+    return uniqueCommentID.length;
+}
+function subscriptionStatus(topicID){
+    var result;
+    var sublist = "sublist-" + account;
+    gun.get(sublist).map().on(function(data){
+        if (topicID == data.tNode){
+            if (data.status == true){
+                result = 1
+            } else {result = 0}
+        } else {
+            result = 0;
+        }
+    })
+    return result;
+}
 
 // Ajax call when button with id viewTnode is clicked, pass value of the clicked button to the function
 function getCookie(name) {
